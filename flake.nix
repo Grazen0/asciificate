@@ -20,8 +20,8 @@
     pkgsFor = nixpkgs.legacyPackages;
   in {
     packages = forAllSystems (system: rec {
-      asciify = pkgsFor.${system}.callPackage ./default.nix {};
-      default = asciify;
+      asciificate = pkgsFor.${system}.callPackage ./default.nix {};
+      default = asciificate;
     });
 
     devShells = forAllSystems (system: {

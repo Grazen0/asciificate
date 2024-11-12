@@ -1,6 +1,6 @@
 use std::{fs, process::ExitCode};
 
-use asciify::{util, AsciifyError};
+use asciificate::{util, AsciificateError};
 use clap::Parser;
 use image::{imageops::FilterType, ImageReader, Rgba};
 
@@ -30,7 +30,7 @@ fn main() -> ExitCode {
 
 fn main_unwrapped(args: Args) -> Result<(), Box<dyn std::error::Error>> {
     if args.gray_scale.is_empty() {
-        return Err(Box::new(AsciifyError::EmptyGrayScale));
+        return Err(Box::new(AsciificateError::EmptyGrayScale));
     }
 
     let (term_width, term_height) = term_size::dimensions()

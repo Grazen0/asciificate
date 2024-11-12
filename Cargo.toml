@@ -1,8 +1,8 @@
 [package]
-name = "asciify"
+name = "asciificate"
 authors = ["Grazen0"]
 description = "Blazingly fast image-to-ASCII converter"
-homepage = "https://github.com/Grazen0/asciify"
+homepage = "https://github.com/Grazen0/asciificate"
 version = "0.1.0"
 edition = "2021"
 
