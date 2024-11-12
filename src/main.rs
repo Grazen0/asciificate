@@ -2,7 +2,7 @@ use std::{fs, process::ExitCode};
 
 use asciificate::{util, AsciificateError};
 use clap::Parser;
-use image::{imageops::FilterType, ImageReader, Rgba};
+use image::{imageops::FilterType, ImageReader, LumaA};
 
 #[derive(Parser, Debug, Clone)]
 #[command(version, about, long_about = None)]
@@ -10,10 +10,13 @@ struct Args {
     filename: String,
 
     #[arg(short, long, default_value_t = String::from(" .:-=+*#%@"))]
-    gray_scale: String,
+    scale: String,
 
     #[arg(short, long)]
     output: Option<String>,
+
+    #[arg(short, long)]
+    invert: bool,
 }
 
 fn main() -> ExitCode {
@@ -29,7 +32,7 @@ fn main() -> ExitCode {
 }
 
 fn main_unwrapped(args: Args) -> Result<(), Box<dyn std::error::Error>> {
-    if args.gray_scale.is_empty() {
+    if args.scale.is_empty() {
         return Err(Box::new(AsciificateError::EmptyGrayScale));
     }
 
@@ -43,16 +46,20 @@ fn main_unwrapped(args: Args) -> Result<(), Box<dyn std::error::Error>> {
         util::fit_dimensions(image.width(), image.height(), term_width / 2, term_height);
     let width = 2 * width;
 
-    let grayscale = args.gray_scale.chars().collect::<Vec<_>>();
+    let grayscale = args.scale.chars().collect::<Vec<_>>();
 
     let result = image
         .resize_exact(width as u32, height as u32, FilterType::Gaussian)
-        .into_rgba8()
+        .into_luma_alpha8()
         .pixels()
-        .map(|Rgba(data)| {
-            let [r, g, b, a] = data.map(|n| n as f32);
-            let avg = (r + g + b + a) / 4.0;
-            grayscale[(avg * grayscale.len() as f32 / 256.0) as usize]
+        .map(|&LumaA([value, alpha])| {
+            let mut value = value as f32 * (alpha as f32 / 255.0);
+
+            if args.invert {
+                value = 255.0 - value;
+            }
+
+            grayscale[(value * (grayscale.len() as f32 / 256.0)) as usize]
         })
         .collect::<Vec<_>>()
         .chunks_exact(width as usize)
