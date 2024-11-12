@@ -16,3 +16,28 @@ pub fn fit_dimensions(
 
     (width, height)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn fit_dimensions_nop() {
+        assert_eq!(fit_dimensions(9, 16, 20, 20), (9, 16));
+    }
+
+    #[test]
+    fn fit_dimensions_shrink_width() {
+        assert_eq!(fit_dimensions(100, 200, 80, 200), (80, 160));
+    }
+
+    #[test]
+    fn fit_dimensions_shrink_height() {
+        assert_eq!(fit_dimensions(60, 90, 80, 60), (40, 60))
+    }
+
+    #[test]
+    fn fit_dimensions_shrink_both() {
+        assert_eq!(fit_dimensions(150, 200, 135, 144), (108, 144));
+    }
+}
