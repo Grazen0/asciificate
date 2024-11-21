@@ -1,13 +1,6 @@
-use crate::color;
-use clap::ValueEnum;
+use crate::{cli::ColorOption, color};
 use colored::{Color, Colorize};
 use image::Rgb;
-
-#[derive(Debug, Clone, ValueEnum)]
-pub enum ColorOption {
-    Ansi,
-    TrueColor,
-}
 
 fn rgb_to_color(r: u8, g: u8, b: u8, opt: &ColorOption) -> Color {
     match opt {
